@@ -345,7 +345,7 @@ svg { display:block; }
     <symbol id="i-user" viewBox="0 0 48 48"><circle cx="24" cy="17" r="8.5" fill="currentColor"/><path d="M8.5 40c1.5-8 8-12.5 15.5-12.5S38 32 39.5 40c.3 1.6-.9 3-2.5 3H11c-1.6 0-2.8-1.4-2.5-3z" fill="currentColor"/></symbol>
     <symbol id="i-trophy" viewBox="0 0 48 48"><path d="M14 8h20v9a10 10 0 0 1-20 0z" fill="var(--ico)" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/><path d="M14 12H9a5 5 0 0 0 5.5 7M34 12h5a5 5 0 0 1-5.5 7" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/><path d="M24 27v6M17 40h14l-2-7H19z" fill="var(--ico)" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 48 48"><path d="M15 15l18 18M33 15L15 33" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
-    <symbol id="i-logout" viewBox="0 0 48 48"><path d="M20 9h-7a4 4 0 0 0-4 4v22a4 4 0 0 0 4 4h7" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M22 24h18M33 16l8 8-8 8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 48 48"><path d="M34 7.5l6.5 6.5L17 37.5H10.5V31L34 7.5z" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M29.5 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol><symbol id="i-logout" viewBox="0 0 48 48"><path d="M20 9h-7a4 4 0 0 0-4 4v22a4 4 0 0 0 4 4h7" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M22 24h18M33 16l8 8-8 8" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-games" viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="28" rx="8" fill="var(--ico)" stroke="var(--ink)" stroke-width="3.5"/><path d="M20 18.5v11l9-5.5z" fill="var(--ink)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-hand" viewBox="0 0 64 64"><path d="M26 34V13a5 5 0 0 1 10 0v15l9.5 1.6a6 6 0 0 1 5 6.9l-1.9 11.8A9 9 0 0 1 39.7 56H31a9 9 0 0 1-7-3.4l-9.2-11.4a4.6 4.6 0 0 1 6.6-6.3z" fill="#fffbf1" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/><path d="M20 10c-3-2-3-6 0-8M42 10c3-2 3-6 0-8" fill="none" stroke="var(--leaf)" stroke-width="3" stroke-linecap="round"/></symbol>
   </defs>
@@ -4069,6 +4069,69 @@ document.getElementById('promoClose').addEventListener('click',hide);
 document.getElementById('promoGo').addEventListener('click',function(e){e.preventDefault();hide();window.location.href='https://cino-songs.pages.dev/billboard';});
 m.addEventListener('click',function(e){if(e.target===m)hide()});
 setTimeout(function(){m.classList.add('show')},1200);})();
+</script>
+
+<style>
+.nickrow{display:flex;align-items:center;justify-content:center;gap:8px}
+#nickEditBtn{width:30px;height:30px;flex:0 0 auto;border-radius:50%;border:3px solid var(--ink);background:var(--cream2);color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--ink);cursor:pointer;padding:0}
+#nickEditBtn svg{width:15px;height:15px}
+#nickEditBtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+#nickEdit{display:none;margin-top:10px}
+#nickEdit.show{display:block}
+#nickEdit .erow{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+#nickInput{width:168px;max-width:54vw;padding:8px 14px;border:3px solid var(--ink);border-radius:999px;background:#fff;font-family:var(--font);font-size:15px;color:#333;outline:none;box-sizing:border-box}
+#nickSave,#nickCancel{border:3px solid var(--ink);border-radius:999px;padding:8px 16px;font-family:var(--font);font-size:14px;font-weight:800;box-shadow:0 3px 0 var(--ink);cursor:pointer}
+#nickSave{background:var(--leafD);color:#fff}
+#nickCancel{background:var(--cream2);color:var(--ink)}
+#nickSave:active,#nickCancel:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+#nickHint{font-size:12px;margin-top:7px;color:#8a9a83;font-style:normal}
+#nickHint.bad{color:var(--red)}
+</style>
+<script>
+(function(){
+var pNick=document.getElementById('pNick');
+if(!pNick) return;
+var row=document.createElement('div'); row.className='nickrow';
+pNick.parentNode.insertBefore(row,pNick); row.appendChild(pNick);
+var btn=document.createElement('button'); btn.id='nickEditBtn'; btn.type='button';
+btn.setAttribute('aria-label','修改昵称');
+btn.innerHTML='<svg viewBox="0 0 48 48"><use href="#i-edit"/></svg>';
+row.appendChild(btn);
+var ed=document.createElement('div'); ed.id='nickEdit';
+ed.innerHTML='<div class="erow"><input id="nickInput" maxlength="12" placeholder="输入新昵称" autocomplete="off"><button id="nickSave" type="button">保存</button><button id="nickCancel" type="button">取消</button></div><em id="nickHint">最多 12 个字，不能和别人重复</em>';
+row.parentNode.insertBefore(ed,row.nextSibling);
+var input=ed.querySelector('#nickInput'), hint=ed.querySelector('#nickHint');
+function curUser(){try{return JSON.parse(localStorage.getItem('gutiaota_user')||'null')}catch(e){return null}}
+function openEd(){var u=curUser(); input.value=u?u.nickname:''; hint.textContent='最多 12 个字，不能和别人重复'; hint.className=''; ed.classList.add('show'); setTimeout(function(){try{input.focus()}catch(e){}},60)}
+function closeEd(){ed.classList.remove('show')}
+btn.addEventListener('click',openEd);
+ed.querySelector('#nickCancel').addEventListener('click',closeEd);
+function api(path,body){
+  var tok=localStorage.getItem('gutiaota_token')||'';
+  function go(base){return fetch(base+path,{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+tok},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j}})})}
+  return go('https://api.cino1018.com/api/tower').catch(function(){return go('https://gugu-tower.pages.dev/api/tower')});
+}
+var busy=false;
+ed.querySelector('#nickSave').addEventListener('click',function(){
+  if(busy) return;
+  var v=input.value.trim();
+  if(!v||[...v].length>12){hint.textContent='昵称要 1\u201312 个字';hint.className='bad';return}
+  if(/[<>&"']/.test(v)||/[\u0000-\u001f\u007f]/.test(v)){hint.textContent='昵称不能包含特殊符号';hint.className='bad';return}
+  var u=curUser(); if(u&&v===u.nickname){closeEd();return}
+  busy=true; hint.textContent='保存中\u2026'; hint.className='';
+  api('/rename',{nickname:v}).then(function(r){
+    busy=false;
+    if(r.j&&r.j.ok&&r.j.user){
+      try{localStorage.setItem('gutiaota_user',JSON.stringify(r.j.user))}catch(e){}
+      pNick.textContent=r.j.user.nickname;
+      var ut=document.getElementById('userTxt'); if(ut) ut.textContent=r.j.user.nickname;
+      closeEd();
+    }else{
+      hint.textContent=(r.j&&r.j.error)||'改名失败，请再试一次'; hint.className='bad';
+    }
+  }).catch(function(){busy=false; hint.textContent='网络不好，请再试一次'; hint.className='bad'});
+});
+})();
 </script>
 </body>
 </html>
