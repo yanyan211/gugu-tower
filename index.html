@@ -4157,6 +4157,7 @@ btn.addEventListener('click',openEd);
 ed.querySelector('#nickCancel').addEventListener('click',closeEd);
 function api(path,body){
   var tok=localStorage.getItem('gutiaota_token')||'';
+  try{var tp=JSON.parse(tok); if(typeof tp==='string') tok=tp;}catch(e){}
   function go(base){return fetch(base+path,{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+tok},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){return {status:r.status,j:j}})})}
   return go('https://api.cino1018.com/api/tower').catch(function(){return go('https://gugu-tower.pages.dev/api/tower')});
 }
